@@ -6,7 +6,66 @@ import time
 import uuid
 from boto3.dynamodb.conditions import Key, Attr
 
-# Aakar and Jayesh contributed for this
+
+# Get info for day
+def get_info_day(event):
+    
+    try:
+        dynamodb = boto3.resource('dynamodb', aws_access_key_id='',aws_secret_access_key='',region_name='us-east-2')
+        table = dynamodb.Table('Purchases')
+        spendingsTable = dynamodb.Table('Spendings')
+    except Exception as e:
+        message = "Error in getting resource the table 1"
+    
+    aakar = ""    
+    try:
+        UserID = event['userId']
+        aakar = event['userId']
+    except e as Exception:
+        aakar = "No error"
+        
+    UserID = "Monil"
+    
+    today = datetime.datetime.now().strftime('%Y-%m-%d')
+    bottles_data = table.query(
+        KeyConditionExpression = Key('UserID').eq(UserID)
+    )
+            
+    print(bottles_data)
+    bottles_list = list()
+    
+    # bottles_current = list()
+    # bottles_previous = list()
+            
+    for i in bottles_data['Items']:
+        bottles_list.append(i['BottleID'])
+            
+    spendingsToday = 0
+    for i in bottles_list:
+        spendings = spendingsTable.scan(
+        FilterExpression = Key('BottleID').eq(i) & Key('Date').eq(today)
+        )
+        spendingsToday += len(spendings['Items'])
+    
+    message = ""
+    
+    if spendingsToday > 4:
+        message = "You have drank "+str(spendingsToday)+" pegs. You have drank too much. Please avoid driving, call Uber/ Lyft"
+    else:
+        message = "You have drank only "+str(spendingsToday)+" pegs. Enjoy our App, Get cheap drinks, Recommend to friends and Stay connected"
+                    
+    return {
+        "dialogAction": {
+            "type": "Close",
+            "fulfillmentState": "Fulfilled",
+            "message": {
+                "contentType": "PlainText",
+                "content": message
+            }
+        }
+    }
+
+
 
 # Function for getting introductory information for bot
 def get_intro(event):
@@ -22,8 +81,7 @@ def get_intro(event):
     }
     
 
-
-# Get the details for bot by city
+# Function for getting the location name by City
 def get_bot_by_city(event):
     
     try:
@@ -80,7 +138,6 @@ def get_bot_by_city(event):
     }    
 
 
-# main dispatch method
 def dispatch(intent_request):
     """
     Called when the user specifies an intent for this bot.
@@ -91,14 +148,18 @@ def dispatch(intent_request):
     if intent_name == 'FindNearestBars':
         return get_bot_by_city(intent_request)
 
-    raise Exception('Intent with name ' + intent_name + ' not supported')
+    #raise Exception('Intent with name ' + intent_name + ' not supported')
     
     if intent_name == 'Intro':
         return get_intro(intent_request)
 
-    raise Exception('Intent with name ' + intent_name + ' not supported')
+    if intent_name == 'MyDayDrink':
+        return get_info_day(intent_request)
 
-""" --- Main handler of Lex code --- """
+
+    #raise Exception('Intent with name ' + intent_name + ' not supported')
+
+""" --- Main handler --- """
 def lambda_handler(event, context):
     return dispatch(event)
 
