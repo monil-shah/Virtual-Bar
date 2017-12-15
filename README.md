@@ -13,9 +13,9 @@ Jayesh Patil
 # Technologies Used
 <br/>
 <p> This Web App is built using *create-React-App*. This react application uses all the front-end UI inspired from the Material-ui. This Web App is compitable with multiple resolution. The backend is deployed on the AWS. The more information about stack is mentioned below.</p>
-* ReactJS
-* Python
-* NoSQl
-* AWS
-* AWS-amplify
-* AWs-amplify-react
+ Markup :* ReactJS
+         * Python
+         * NoSQl
+         * AWS
+         * AWS-amplify
+         * AWs-amplify-react
