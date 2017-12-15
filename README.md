@@ -30,5 +30,6 @@ Jayesh Patil
          6. AWS Lex Bot<br/>
          7. AWS Cloud Logic <br/>
          8. AWS Analytics metrics<br/>
-         
-![Alt text](/ArchitectureDiagram.jpeg?raw=true "Title")
+
+# Architecture Diagram       
+![Alt text](/ArchitectureDiagram.jpeg?raw=true "AWS Architecture")
