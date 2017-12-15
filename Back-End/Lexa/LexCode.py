@@ -4,14 +4,40 @@ import boto3
 import json
 import time
 import uuid
+import random
 from boto3.dynamodb.conditions import Key, Attr
 
+# Get info for day
+def get_fact(event):
+    try:
+        dynamodb = boto3.resource('dynamodb', aws_access_key_id='AKIAI64S4XNPWDN5FVKQ',aws_secret_access_key='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',region_name='us-east-2')
+        table = dynamodb.Table('Fact')
+    except Exception as e:
+        message = "Error in getting resource the table 1"
+    
+    temp = random.randint(1,16)
+    fact_data = table.query(
+        KeyConditionExpression = Key('FactID').eq(temp)
+    )
+    
+    message = fact_data["Fact"]
+                    
+    return {
+        "dialogAction": {
+            "type": "Close",
+            "fulfillmentState": "Fulfilled",
+            "message": {
+                "contentType": "PlainText",
+                "content": message
+            }
+        }
+    }
 
 # Get info for day
 def get_info_day(event):
     
     try:
-        dynamodb = boto3.resource('dynamodb', aws_access_key_id='',aws_secret_access_key='',region_name='us-east-2')
+        dynamodb = boto3.resource('dynamodb', aws_access_key_id='AKIAI64S4XNPWDN5FVKQ',aws_secret_access_key='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',region_name='us-east-2')
         table = dynamodb.Table('Purchases')
         spendingsTable = dynamodb.Table('Spendings')
     except Exception as e:
@@ -88,7 +114,7 @@ def get_bot_by_city(event):
         loc_name = event['currentIntent']['slots']['loc_name']
         
         try:
-            dynamodb = boto3.resource('dynamodb', aws_access_key_id='',aws_secret_access_key='',region_name='us-east-2')
+            dynamodb = boto3.resource('dynamodb', aws_access_key_id='AKIAI64S4XNPWDN5FVKQ',aws_secret_access_key='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',region_name='us-east-2')
             table = dynamodb.Table('Bar')
         except Exception as e:
             loc_name = "error in Dynamo DB"
@@ -155,6 +181,9 @@ def dispatch(intent_request):
 
     if intent_name == 'MyDayDrink':
         return get_info_day(intent_request)
+        
+    if intent_name == 'Fact':
+        return get_fact(intent_request)
 
 
     #raise Exception('Intent with name ' + intent_name + ' not supported')
@@ -162,4 +191,3 @@ def dispatch(intent_request):
 """ --- Main handler --- """
 def lambda_handler(event, context):
     return dispatch(event)
-
