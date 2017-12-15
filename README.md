@@ -18,4 +18,15 @@ Jayesh Patil
          3. NoSQl<br/>
          4. AWS<br/>
          5. AWS-amplify<br/>
-         6. AWs-amplify-react<br/>
+         6. AWS-amplify-react<br/>
+
+# AWS-Stack Used
+<br/>
+1. AWS-Mobile-Hub<br/>
+         2. AWS-Cognito<br/>
+         3. API Gateway<br/>
+         4. AWS Lambda<br/>
+         5. DynamoDB<br/>
+         6. AWS Lex Bot<br/>
+         7. AWS Cloud Logic <br/>
+         8. AWS Analytics metrics<br/>
