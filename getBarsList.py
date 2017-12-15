@@ -32,6 +32,7 @@ def getBarsData(event, context):
 
             bars = dict()
 
+            # Sending bars data over front end, dividing the bars response into two tiers for front end betterment
             for i in bars_data['Items']:
                 tier = 'Tier'+str(i['Tier'])
                 if tier not in bars:

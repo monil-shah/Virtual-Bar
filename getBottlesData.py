@@ -8,7 +8,7 @@ from boto3.dynamodb.conditions import Key, Attr
 
 def getBottlesData(event, context):
     
-    
+    # Creating DynamoDB object for Purchase table
     try:
         dynamodb = boto3.resource('dynamodb', aws_access_key_id='',aws_secret_access_key='',region_name='us-east-2')
         table = dynamodb.Table('Purchases')
@@ -35,6 +35,7 @@ def getBottlesData(event, context):
     
         try:
     
+            # Fetching all the bottles for given user
             bottles_data = table.query(
                 KeyConditionExpression = Key('UserID').eq(UserID)
             )
@@ -42,7 +43,7 @@ def getBottlesData(event, context):
             print(bottles_data)
             print('Exception in getting user data from table')
             
-               
+            # Creating three keys for the dictionary and sending data over to front-end. for orders ongoing, and past   
             bottles = dict()
             bottles['current'] = list()
             bottles['previous'] = list()
@@ -59,7 +60,8 @@ def getBottlesData(event, context):
                 item['Name'] = str(i['Name'])
                 item['Url'] = str(i['Url'])
                 item['Price'] = str(i['Price'])
-            
+                
+                # current has bottles order having full capacity, reedemed has partial capacity and previous are past orders
                 if(int(item['Quantity']) == 10):
                     bottles['current'].append(item)
                 elif((int(item['Quantity']) > 0) and (int(item['Quantity']) < 10)):

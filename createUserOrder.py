@@ -7,12 +7,14 @@ import uuid
 
 def createUserOrder(event, context):
     
+    # Dyanamo DB object creation for Purchases table
     try:
         dynamodb = boto3.resource('dynamodb', aws_access_key_id='',aws_secret_access_key='',region_name='us-east-2')
         table = dynamodb.Table('Purchases')
     except Exception as e:
         print ("Error in getting resource the table 1")
-        
+       
+    # Loading data from event['body'] regarding purchases    
     try:
         purchase = json.loads(event['body'])
         purchase_data = purchase['data']
@@ -21,9 +23,11 @@ def createUserOrder(event, context):
         print("error in json loads")
         responseObj = {"status" : "false", "error" : e}
     else:
+        # All the orders will have same date and timestamp
         timestamp = str(time.time())
         date = str(datetime.date.today())
         
+        # Iterating over Dynamo DB and entering purchase data. Also partition key is username and sort key is bottleID
         for purchase in purchase_data:
             try:
                 table.put_item(
@@ -46,7 +50,7 @@ def createUserOrder(event, context):
             else:
                 responseObj = {"status" : "true"}
         
-        
+    # CORS header and Lambda Proxy is enabled     
     response = {
         'statusCode' : 200,
         'headers': {
