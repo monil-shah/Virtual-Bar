@@ -1,4 +1,4 @@
-# Virtual-Bar-Cloud-Computing-Project-CS-GY-9223-
+# Virtual Bar
 By:
 Monil Shah(mds747), 
 Aalap Parikh(adp459), 
